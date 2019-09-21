@@ -1,11 +1,9 @@
 const express = require('express')
 const passport = require('passport')
-const router = express.Router()
-const User = require('../models/User')
-
-// Bcrypt to encrypt passwords
 const bcrypt = require('bcryptjs')
 const bcryptSalt = 10
+const router = express.Router()
+const User = require('../models/User')
 
 router.post('/signup', (req, res, next) => {
     const { username, password, name } = req.body
@@ -19,17 +17,11 @@ router.post('/signup', (req, res, next) => {
                 res.status(409).json({ message: 'The username already exists' })
                 return
             }
-            const salt = bcrypt.genSaltSync(bcryptSalt)
-            const hashPass = bcrypt.hashSync(password, salt)
-            const newUser = new User({ username, password: hashPass, name })
+            const newUser = new User({ username, password: bcrypt.hashSync(password, bcrypt.genSaltSync(bcryptSalt)), name })
             return newUser.save()
         })
         .then(userSaved => {
-            // LOG IN THIS USER
-            // "req.logIn()" is a Passport method that calls "serializeUser()"
-            // (that saves the USER ID in the session)
             req.logIn(userSaved, () => {
-                // hide "encryptedPassword" before sending the JSON (it's a security risk)
                 userSaved.password = undefined
                 res.json(userSaved)
             })
@@ -40,29 +32,19 @@ router.post('/signup', (req, res, next) => {
 router.post('/login', (req, res, next) => {
     const { username, password } = req.body
 
-    // first check to see if there's a document with that username
     User.findOne({ username })
         .then(userDoc => {
-            // "userDoc" will be empty if the username is wrong (no document in database)
             if (!userDoc) {
-                // create an error object to send to our error handler with "next()"
                 next(new Error('Incorrect username '))
                 return
             }
 
-            // second check the password
-            // "compareSync()" will return false if the "password" is wrong
             if (!bcrypt.compareSync(password, userDoc.password)) {
-                // create an error object to send to our error handler with "next()"
                 next(new Error('Password is wrong'))
                 return
             }
 
-            // LOG IN THIS USER
-            // "req.logIn()" is a Passport method that calls "serializeUser()"
-            // (that saves the USER ID in the session)
             req.logIn(userDoc, () => {
-                // hide "encryptedPassword" before sending the JSON (it's a security risk)
                 userDoc.password = undefined
                 res.json(userDoc)
             })
@@ -88,7 +70,6 @@ router.post('/login-with-passport-local-strategy', (req, res, next) => {
                 return
             }
 
-            // We are now logged in (notice req.user)
             res.json(req.user)
         })
     })(req, res, next)

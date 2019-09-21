@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const HazardSchema = new Schema({
     position: { lat: Number, lon: Number },
-    type: { type: String },
+    type: { type: String, enum: ['Larceny/Theft', 'Burglary', 'Motor Vehicle Theft', 'Assault', 'Robbery'] },
     creator: { type: Schema.Types.ObjectId, ref: 'User' }
 }, {
     timestamps: {
@@ -13,5 +13,4 @@ const HazardSchema = new Schema({
 })
 
 const Hazard = mongoose.model('Hazard', HazardSchema)
-
 module.exports = Hazard
