@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+
+const http = require('http')
+
+let app = require('../app')
+
+let server = http.createServer(app)
+
+server.on('error', error => {
+  if (error.syscall !== 'listen') {
+    throw error
+  }
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(`Port ${process.env.BACKEND_PORT} requires elevated privileges`)
+      process.exit(1)
+      break
+    case 'EADDRINUSE':
+      console.error(`Port ${process.env.BACKEND_PORT} is already in use`)
+      process.exit(1)
+      break
+    default:
+      throw error
+  }
+})
+
+if (!process.env.BACKEND_PORT) process.env.BACKEND_PORT = 5000
+
+server.listen(process.env.BACKEND_PORT, () => {
+  console.log(`Listening on http://localhost:${process.env.BACKEND_PORT}`)
+})
+
+module.exports = server
