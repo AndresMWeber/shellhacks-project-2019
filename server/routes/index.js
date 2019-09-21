@@ -1,5 +1,5 @@
 const express = require('express')
-const { isLoggedIn } = require('../middlewares')
+const { isLoggedIn } = require('../middleware/auth')
 const router = express.Router()
 
 router.get('/secret', isLoggedIn, (req, res, next) => {

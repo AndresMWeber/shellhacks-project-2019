@@ -1,5 +1,5 @@
 const path = require('path')
-require('dotenv').config({ path: path.join(__dirname, '.env') })
+require('dotenv').config({ path: path.join(__dirname, '../.env') })
 
 const bodyParser = require('body-parser')
 const cors = require('cors')
@@ -12,9 +12,6 @@ const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 
 require('./configs/database')
-
-const app_name = require('./package.json').name
-const app_version = require('./package.json').version
 
 const app = express()
 
@@ -50,20 +47,15 @@ app.use(
 )
 require('./passport')(app)
 
-app.use(`/api/${app_version}`, require('./routes/index'))
-app.use(`/api/${app_version}`, require('./routes/auth'))
-app.use(`/api/${app_version}/hazards`, require('./routes/countries'))
+app.use(`/api/`, require('./routes/index'))
+app.use(`/api/`, require('./routes/auth'))
+app.use(`/api/hazards`, require('./routes/hazards'))
 
 // For any routes that starts with "/api", catch 404 and forward to error handler
 app.use('/api/*', (req, res, next) => {
     let err = new Error('Not Found')
     err.status = 404
     next(err)
-})
-
-// For any other routes, redirect to the index.html file of React
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build/index.html'))
 })
 
 // Error handler

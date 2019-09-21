@@ -12,6 +12,6 @@ const HazardSchema = new Schema({
     },
 })
 
-const Hazard = mongoose.Model('Hazard', HazardSchema)
+const Hazard = mongoose.model('Hazard', HazardSchema)
 
 module.exports = Hazard
