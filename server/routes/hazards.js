@@ -1,6 +1,6 @@
 const express = require('express')
 const Hazard = require('../models/Hazard')
-
+const isLoggedIn = require('../middleware/auth')
 const router = express.Router()
 
 /** 
@@ -24,7 +24,7 @@ router.get('/', (req, res, next) => {
  * @example
  * POST /api/hazards
  * */
-router.post('/', (req, res, next) => {
+router.post('/', isLoggedIn, (req, res, next) => {
     let { name, capitals, area, description } = req.body
     Hazard.create({ name, capitals, area, description })
         .then(hazard => {
@@ -36,4 +36,18 @@ router.post('/', (req, res, next) => {
         .catch(err => next(err))
 })
 
+/** 
+ * Get all hazards within a specific distance.
+ * TODO: Change this to a post so we can input a distance.
+ * @example
+ * GET /api/hazards
+ * */
+// Route to get all hazards
+router.get('/search', (req, res, next) => {
+    Hazard.find()
+        .then(hazards => {
+            res.json(hazards)
+        })
+        .catch(err => next(err))
+})
 module.exports = router
