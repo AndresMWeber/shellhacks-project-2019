@@ -1,11 +1,11 @@
 import React from 'react';
-import Map from './components/Map'
 import './App.css';
+// import Map from './components/Map' =================== IMPORTING NEW COMPONENT
 
 function App() {
   return (
     <div className="App">
-      <Map />
+      {/* <Map />  =============== this is how you import a new component*/}
     </div>
   );
 }
