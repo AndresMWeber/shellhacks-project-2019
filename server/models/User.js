@@ -22,6 +22,11 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Hazard'
     }]
+}, {
+    timestamps: {
+        createdAt: 'created_at',
+        updatedAt: 'updated_at',
+    },
 })
 
 userSchema.methods.toJSON = function() {
