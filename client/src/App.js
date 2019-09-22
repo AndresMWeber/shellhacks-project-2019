@@ -1,11 +1,13 @@
 import React from 'react';
+import Map from './components/Map'
 import './App.css';
-// import Map from './components/Map' =================== IMPORTING NEW COMPONENT
+require("dotenv").config();
+
 
 function App() {
   return (
-    <div className="App">
-      {/* <Map />  =============== this is how you import a new component*/}
+    <div className="App" id="container">
+      <Map />,
     </div>
   );
 }
