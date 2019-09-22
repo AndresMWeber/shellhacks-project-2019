@@ -1,15 +1,15 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+
 const pointSchema = new mongoose.Schema({
     type: {
         type: String,
-        enum: ['Point'],
-        required: true
+        default: 'Point'
     },
     coordinates: {
         type: [Number],
-        required: true,
-        default: ["25°45'22.7N", "80°22'32.4W"]
+        index: '2dsphere',
+        required: true
     }
 });
 
@@ -30,6 +30,8 @@ const HazardSchema = new Schema({
         updatedAt: 'updated_at',
     },
 })
+
+HazardSchema.index({ location: "2dsphere" });
 
 const Hazard = mongoose.model('Hazard', HazardSchema)
 module.exports = Hazard
