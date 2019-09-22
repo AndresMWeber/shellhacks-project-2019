@@ -7,7 +7,9 @@ require("dotenv").config();
 function App() {
   return (
     <div className="App" id="container">
-      <Map />,
+      <div className="map">
+        <Map />,
+      </div>
     </div>
   );
 }

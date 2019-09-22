@@ -35,18 +35,13 @@ class SimpleMap extends Component {
         console.log(err);
       });
   }
-  getKey() {
-    axios.get("http://localhost:3000/api/api-key").then(results => {
-      this.setState({ key: results.GOOGLEMAPS_API_KEY });
-    });
-  }
 
   render() {
     return (
       // Important! Always set the container height explicitly
       <div style={{ height: "75vh", width: "60%" }}>
         <GoogleMapReact
-          bootstrapURLKeys={{ key: this.state.key }}
+          bootstrapURLKeys={{ key: "AIzaSyA-Jb3JAwEHzOALBHyht19lDK6_vIyllIs" }}
           defaultCenter={this.props.center}
           defaultZoom={this.props.zoom}
         >
