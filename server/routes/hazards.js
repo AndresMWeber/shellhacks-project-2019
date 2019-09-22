@@ -1,7 +1,8 @@
 const express = require('express')
 const Hazard = require('../models/Hazard')
-const isLoggedIn = require('../middleware/auth')
+const { isLoggedIn } = require('../middleware/auth')
 const router = express.Router()
+
 
 /** 
  * Get all hazards within a specific distance.
@@ -25,8 +26,8 @@ router.get('/', (req, res, next) => {
  * POST /api/hazards
  * */
 router.post('/', isLoggedIn, (req, res, next) => {
-    let { name, capitals, area, description } = req.body
-    Hazard.create({ name, capitals, area, description })
+    let { description, incidentNumber, location, address, agency, date } = req.body
+    Hazard.create({ description, incidentNumber, location, address, agency, date })
         .then(hazard => {
             res.json({
                 success: true,
@@ -40,11 +41,29 @@ router.post('/', isLoggedIn, (req, res, next) => {
  * Get all hazards within a specific distance.
  * TODO: Change this to a post so we can input a distance.
  * @example
- * GET /api/hazards
+ * GET /api/hazards/search?lat=20&lon=-60
+ * GET /api/hazards/search?lat=20&lon=-60&minDist=5&maxDist=100
  * */
 // Route to get all hazards
 router.get('/search', (req, res, next) => {
-    Hazard.find()
+    const lat = req.query.lat || 25.756365
+    const lon = req.query.lon || -80.375716
+    const maxDist = req.query.maxDist || 32186.9 // 20 miles
+    const minDist = req.query.minDist || 0
+
+    console.log(`Searching for hazards near ${lat}, ${lon} within ${minDist} - ${maxDist}`)
+    Hazard.find({
+            location: {
+                $near: {
+                    $geometry: { 
+                        type: "Point", 
+                        coordinates: [lat, lon] 
+                    },
+                    $minDistance: minDist,
+                    $maxDistance: maxDist
+                }
+            }
+        })
         .then(hazards => {
             res.json(hazards)
         })

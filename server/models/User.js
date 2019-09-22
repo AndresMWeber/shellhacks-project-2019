@@ -18,10 +18,12 @@ const userSchema = new Schema({
             if (value.toLowerCase().includes('password')) throw new Error('Password cannot contain "password"')
         }
     },
-    hazardNotifications: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Hazard'
-    }]
+    role: {
+        type: String,
+        enum: ['Admin', 'User', 'Guest'],
+        default: 'User'
+    },
+    hazardNotifications: [{ type: String }]
 }, {
     timestamps: {
         createdAt: 'created_at',
@@ -46,6 +48,9 @@ userSchema.statics.findByCredentials = async(email, password) => {
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) throw new Error('Unable to login')
     return user
+}
+userSchema.methods.validPassword = function validPassword(password) {
+    return !bcrypt.compareSync(password, this.password)
 }
 
 // Hash the plain text password before saving

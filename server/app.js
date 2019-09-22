@@ -10,6 +10,9 @@ const logger = require('morgan')
 const nocache = require('nocache')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
+const passport = require('passport')
+const LocalStrategy = require('passport-local').Strategy;
+const User = require('./models/User')
 
 require('./configs/database')
 
@@ -47,6 +50,20 @@ app.use(
 )
 require('./passport')(app)
 
+passport.use(new LocalStrategy(
+    function(username, password, done) {
+        User.findOne({ username: username }, function(err, user) {
+            if (err) { return done(err); }
+            if (!user) {
+                return done(null, false, { message: 'Incorrect username.' });
+            }
+            if (!user.validPassword(password)) {
+                return done(null, false, { message: 'Incorrect password.' });
+            }
+            return done(null, user);
+        });
+    }
+));
 app.use(`/api/`, require('./routes/index'))
 app.use(`/api/`, require('./routes/auth'))
 app.use(`/api/hazards`, require('./routes/hazards'))
