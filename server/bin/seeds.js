@@ -13,12 +13,14 @@ function connectToDB() {
     db.collection('willISurvive').conn.collections.hazards.createIndex({ location: "2dsphere" })
 }
 
+/**
+ * This is meant to be run on data.csv coming in from Talal.  It only converts to JSON and hardcodes the filepath.
+ */
 function convertCSVtoJSON() {
     connectToDB()
     csv()
         .fromFile('./data.csv')
         .then((crimeDataSet) => {
-
             fs.writeFile("data.json", JSON.stringify(~crimeDataSet), 'utf8', function(err) {
                 if (err) {
                     console.log("An error occurred while writing JSON Object to File.");
@@ -30,6 +32,10 @@ function convertCSVtoJSON() {
         })
 }
 
+/**
+ * This is meant to be run on dataGeocoded (After running geolocation.py).  
+ * It renames all fields to the proper field names in Hazard.
+ */
 function fillCollectionFromJSON() {
     connectToDB()
     let rawData = fs.readFileSync('./dataGeocoded.json');

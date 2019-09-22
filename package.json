@@ -20,7 +20,8 @@
   },
   "scripts": {
     "dev:server": "cd server && npm run dev",
-    "dev:client": "cd client && npm run start"
+    "dev:client": "cd client && npm run start",
+    "seedDB": "cd server/bin && node -e \"require('./seeds').convertCSVtoJSON()\" && python3 geolocation.py && node -e \"require('./seeds').fillCollectionFromJSON()\""
   },
   "eslintConfig": {
     "extends": "react-app"
