@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import GoogleMapReact from "google-map-react";
 import Marker from "./map-atoms/Marker.tsx";
+import axios from "axios";
 
 const markerText = ({ text }) => <div>{text}</div>;
 
@@ -13,19 +14,31 @@ class SimpleMap extends Component {
     zoom: 15,
     maxDist: 500,
     markerLat: Number,
-    markerLng: Number,
+    markerLng: Number
     // hazard: this.defaultProps.any,
   };
-  getData(){
-    axios.get(`http://localhost:3000/api/hazards/search?lat=${this.defaultProps.markerLat}&lon=${this.defaultProps.markerLng}&maxDist=${10000}`)
-    .then((hazards)=>{
-        for(i=0; i<hazards.length; i++){
+  state = {
+    key: String
+  };
 
-        }
-    })
-    .catch((err)=>{
-        console.log(err)
-    })
+  getData() {
+    axios
+      .get(
+        `http://localhost:3000/api/hazards/search?lat=${
+          this.defaultProps.markerLat
+        }&lon=${this.defaultProps.markerLng}&maxDist=${10000}`
+      )
+      .then(hazards => {
+        for (let i = 0; i < hazards.length; i++) {}
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+  getKey() {
+    axios.get("http://localhost:3000/api/api-key").then(results => {
+      this.setState({ key: results.GOOGLEMAPS_API_KEY });
+    });
   }
 
   render() {
@@ -33,7 +46,7 @@ class SimpleMap extends Component {
       // Important! Always set the container height explicitly
       <div style={{ height: "75vh", width: "60%" }}>
         <GoogleMapReact
-          bootstrapURLKeys={{ key: process.env.GOOGLEMAPS_API_KEY }}
+          bootstrapURLKeys={{ key: this.state.key }}
           defaultCenter={this.props.center}
           defaultZoom={this.props.zoom}
         >
