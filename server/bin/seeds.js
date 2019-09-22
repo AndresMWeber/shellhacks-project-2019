@@ -17,18 +17,16 @@ function connectToDB() {
  * This is meant to be run on data.csv coming in from Talal.  It only converts to JSON and hardcodes the filepath.
  */
 function convertCSVtoJSON() {
-    connectToDB()
     csv()
-        .fromFile('./data.csv')
+        .fromFile('data.csv')
         .then((crimeDataSet) => {
-            fs.writeFile("data.json", JSON.stringify(~crimeDataSet), 'utf8', function(err) {
+            fs.writeFile("data.json", JSON.stringify(crimeDataSet), 'utf8', function(err) {
                 if (err) {
                     console.log("An error occurred while writing JSON Object to File.");
                     return console.log(err);
                 }
                 console.log("JSON file has been saved.");
             });
-
         })
 }
 
@@ -58,16 +56,16 @@ function fillCollectionFromJSON() {
         }
     })
 
-    Hazard.collection.insert(crimeDataSetCorrected, function(err, results) {
+    Hazard.collection.insertMany(crimeDataSetCorrected, function(err, results) {
         if (err) {
             return console.error(err);
         } else {
-            console.log("Multiple documents inserted to Collection", results.length);
+            console.log("Multiple documents inserted to Collection...closing...");
+            mongoose.connection.close()
         }
     });
 }
 
-// fillCollectionFromJSON()
 module.exports = {
     fillCollectionFromJSON,
     convertCSVtoJSON
