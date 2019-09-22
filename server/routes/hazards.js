@@ -42,24 +42,22 @@ router.post('/', isLoggedIn, (req, res, next) => {
  * TODO: Change this to a post so we can input a distance.
  * @example
  * GET /api/hazards/search?lat=20&lon=-60
- * GET /api/hazards/search?lat=20&lon=-60&minDist=5&maxDist=100
+ * GET /api/hazards/search?lat=20&lon=-60&maxDist=100
  * */
 // Route to get all hazards
 router.get('/search', (req, res, next) => {
     const lat = req.query.lat || 25.756365
     const lon = req.query.lon || -80.375716
     const maxDist = req.query.maxDist || 32186.9 // 20 miles
-    const minDist = req.query.minDist || 0
 
-    console.log(`Searching for hazards near ${lat}, ${lon} within ${minDist} - ${maxDist}`)
+    console.log(`Searching for hazards near ${lat}, ${lon} within ${maxDist} meters`)
     Hazard.find({
             location: {
                 $near: {
-                    $geometry: { 
+                    $geometry: {
                         type: "Point", 
-                        coordinates: [lat, lon] 
+                        coordinates: [lon, lat]
                     },
-                    $minDistance: minDist,
                     $maxDistance: maxDist
                 }
             }

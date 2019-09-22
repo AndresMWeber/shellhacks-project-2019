@@ -31,5 +31,7 @@ const HazardSchema = new Schema({
     },
 })
 
+HazardSchema.index({ location: "2dsphere" });
+
 const Hazard = mongoose.model('Hazard', HazardSchema)
 module.exports = Hazard

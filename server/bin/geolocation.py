@@ -13,9 +13,10 @@ for entry in crimeDataSet:
     try:
         geocode_result = gmaps.geocode(fixed_location)[0]
         lat_lon = geocode_result['geometry']['location']
-        entry['location'] = [lat_lon['lat'], lat_lon['lng']]
+        entry['location'] = [lat_lon['lng'], lat_lon['lat']]
     except:
         print('\tFailed to find geocode for location: {}'.format(fixed_location))
 
 with open('dataGeocoded.json', 'w') as outfile:
     json.dump(crimeDataSet, outfile)
+print('Finished writing out geocode appended JSON file.')
