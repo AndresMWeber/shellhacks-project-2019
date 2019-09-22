@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 // Don't forget to set "MONGODB_URI" in ~/server/.env
 const uri =
     process.env.MONGODB_URI ||
-    `mongodb://localhost/please-set-process-env-mongodb-uri`
+    `mongodb://localhost/willISurvive`
 
 mongoose
     .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })

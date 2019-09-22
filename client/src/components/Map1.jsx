@@ -12,11 +12,12 @@ class SimpleMap extends Component {
     },
     zoom: 15,
     maxDist: 500,
-    markerLat: Number,
-    markerLng: Number
+    markerLat: 0,
+    markerLng: 0
     // hazard: this.defaultProps.any,
   };
   getData() {
+    console.log("aksopgka", this.props);
     axios
       .get(
         `http://localhost:3000/api/hazards/search?lat=${
@@ -49,6 +50,6 @@ class SimpleMap extends Component {
   }
 }
 
-console.log(SimpleMap);
+// console.log(SimpleMap);
 
 export default SimpleMap;

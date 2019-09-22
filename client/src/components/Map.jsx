@@ -12,24 +12,29 @@ class SimpleMap extends Component {
       lng: -80.375464
     },
     zoom: 15,
-    maxDist: 500,
-    markerLat: Number,
-    markerLng: Number
+    maxDist: 15000,
+    markerLat: 25.7542529,
+    markerLng: -80.2878964
+
     // hazard: this.defaultProps.any,
   };
   state = {
     key: String
   };
 
-  getData() {
+  createMarkers() {
+    console.log(this);
     axios
       .get(
-        `http://localhost:3000/api/hazards/search?lat=${
-          this.defaultProps.markerLat
-        }&lon=${this.defaultProps.markerLng}&maxDist=${10000}`
+        `http://localhost:5000/api/hazards/search?lat=${this.props.markerLat}&lon=${this.props.markerLng}&maxDist=${this.props.maxDist}`
       )
       .then(hazards => {
-        for (let i = 0; i < hazards.length; i++) {}
+        hazards.map(hazard => {
+          let { address, date, description } = hazards.data;
+          let [lon, lat] = hazards.data.location.coordinates;
+
+          return <Marker lat={lat} lng={lon} text={description} />;
+        });
       })
       .catch(err => {
         console.log(err);
@@ -38,22 +43,26 @@ class SimpleMap extends Component {
 
   render() {
     return (
-      // Important! Always set the container height explicitly
-      <div style={{ height: "75vh", width: "60%" }}>
-        <GoogleMapReact
-          bootstrapURLKeys={{ key: "AIzaSyA-Jb3JAwEHzOALBHyht19lDK6_vIyllIs" }}
-          defaultCenter={this.props.center}
-          defaultZoom={this.props.zoom}
-        >
-          <div className="markers">
+      <div className="container">
+        // Important! Always set the container height explicitly
+        {this.getData()}
+        <div style={{ height: "75vh", width: "60%" }}>
+          <GoogleMapReact
+            bootstrapURLKeys={{
+              key: "AIzaSyA-Jb3JAwEHzOALBHyht19lDK6_vIyllIs"
+            }}
+            defaultCenter={this.props.center}
+            defaultZoom={this.props.zoom}
+          >
             <Marker lat={25.757225} lng={-80.375464} text="My Marker" />
-          </div>
-        </GoogleMapReact>
+            {this.createMarkers()}
+          </GoogleMapReact>
+        </div>
       </div>
     );
   }
 }
 
-console.log(SimpleMap);
+// console.log(SimpleMap);
 
 export default SimpleMap;
