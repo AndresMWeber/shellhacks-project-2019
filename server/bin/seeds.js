@@ -9,7 +9,7 @@ mongoose
     .then(db => console.log(`Connected to Mongo! Database name: "${db.connections[0].name}"`))
     .catch(err => console.error('Error connecting to mongo', err))
 var db = mongoose.connection;
-db.collection('willISurive').conn.collections.hazards.createIndex({ location: "2dsphere" })
+db.collection('willISurvive').conn.collections.hazards.createIndex({ location: "2dsphere" })
 
 function convertCSVtoJSON() {
     csv()
@@ -18,7 +18,7 @@ function convertCSVtoJSON() {
 
             fs.writeFile("data.json", JSON.stringify(crimeDataSet), 'utf8', function(err) {
                 if (err) {
-                    console.log("An error occured while writing JSON Object to File.");
+                    console.log("An error occurred while writing JSON Object to File.");
                     return console.log(err);
                 }
                 console.log("JSON file has been saved.");
